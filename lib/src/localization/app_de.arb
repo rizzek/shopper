@@ -1,3 +1,11 @@
 {
-  "appTitle": "Shopper"
+  "appTitle": "Shopper",
+  "settings": "Einstellungen",
+  "appearance": "Erscheinungsbild",
+  "systemTheme": "Auto",
+  "lightTheme": "Hell",
+  "darkTheme": "Dunkel",
+  "language": "Sprache",
+  "language_de": "Deutsch",
+  "language_en": "Englisch"
 }

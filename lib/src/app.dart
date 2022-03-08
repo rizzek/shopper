@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
@@ -49,25 +50,14 @@ class ShopperApp extends StatelessWidget {
           // background.
           restorationScopeId: 'app',
 
-          // Provide the generated AppLocalizations to the MaterialApp. This
-          // allows descendant Widgets to display the correct translations
-          // depending on the user's locale.
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale('en', ''), // English, no country code
-            Locale('de', ''),
-          ],
+          // Enable l10n support
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+
+          locale: context.read<SettingsController>().locale,
 
           // Use AppLocalizations to configure the correct application title
           // depending on the user's locale.
-          //
-          // The appTitle is defined in .arb files found in the localization
-          // directory.
           onGenerateTitle: (BuildContext context) =>
               AppLocalizations.of(context)!.appTitle,
 

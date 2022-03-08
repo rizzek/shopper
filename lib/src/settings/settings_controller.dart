@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import 'settings_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// A class that many Widgets can interact with to read user settings, update
 /// user settings, or listen to user settings changes.
@@ -17,15 +19,19 @@ class SettingsController with ChangeNotifier {
   // also persisting the changes with the SettingsService.
   late ThemeMode _themeMode;
 
+  late Locale _locale;
+
   // Allow Widgets to read the user's preferred ThemeMode.
   ThemeMode get themeMode => _themeMode;
+
+  Locale get locale => _locale;
 
   /// Load the user's settings from the SettingsService. It may load from a
   /// local database or the internet. The controller only knows it can load the
   /// settings from the service.
   Future<void> loadSettings() async {
     _themeMode = await _settingsService.themeMode();
-
+    _locale = await _settingsService.preferredLocale();
     // Important! Inform listeners a change has occurred.
     notifyListeners();
   }
@@ -47,4 +53,19 @@ class SettingsController with ChangeNotifier {
     // SettingService.
     await _settingsService.updateThemeMode(newThemeMode);
   }
+
+  Future<void> updatePreferredLocale(String? localeString) async {
+    if (localeString == null) return;
+
+    if (localeString == _locale.languageCode) return;
+
+    _locale = Locale(localeString);
+
+    // S.load(_preferredLocale);
+
+    notifyListeners();
+
+    await _settingsService.updateLocale(localeString);
+  }
+
 }
