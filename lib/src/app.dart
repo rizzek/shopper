@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:shopper/src/home/home_screen.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
 import 'sample_feature/sample_item_list_view.dart';
@@ -18,7 +19,7 @@ class ShopperApp extends StatelessWidget {
 
   final _router = GoRouter(routes: [
     GoRoute(path: '/', name: 'home', builder: (context, state) {
-      return const SampleItemListView();
+      return const HomeScreen();
     }),
     GoRoute(path: '/details', builder: (context, state) {
       return const SampleItemDetailsView();
