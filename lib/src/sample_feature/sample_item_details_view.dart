@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 class SampleItemDetailsView extends StatelessWidget {
   const SampleItemDetailsView({Key? key}) : super(key: key);
 
-  static const routeName = '/sample_item';
 
   @override
   Widget build(BuildContext context) {

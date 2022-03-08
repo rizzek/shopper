@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 import 'sample_feature/sample_item_details_view.dart';
 import 'sample_feature/sample_item_list_view.dart';
@@ -8,13 +10,23 @@ import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
 /// The Widget that configures your application.
-class MyApp extends StatelessWidget {
-  const MyApp({
+class ShopperApp extends StatelessWidget {
+  ShopperApp({
     Key? key,
-    required this.settingsController,
   }) : super(key: key);
 
-  final SettingsController settingsController;
+  final _router = GoRouter(routes: [
+    GoRoute(path: '/', name: 'home', builder: (context, state) {
+      return const SampleItemListView();
+    }),
+    GoRoute(path: '/details', builder: (context, state) {
+      return const SampleItemDetailsView();
+    }),
+    GoRoute(path: '/settings', name: 'settings', builder: (context, state) {
+      return SettingsView(controller: context.read<SettingsController>());
+    }),
+  ]);
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +35,14 @@ class MyApp extends StatelessWidget {
     // The AnimatedBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
     return AnimatedBuilder(
-      animation: settingsController,
+      animation: context.watch<SettingsController>(),
       builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
+        return MaterialApp.router(
+
+          routeInformationParser: _router.routeInformationParser,
+
+          routerDelegate: _router.routerDelegate,
+
           // Providing a restorationScopeId allows the Navigator built by the
           // MaterialApp to restore the navigation stack when a user leaves and
           // returns to the app after it has been killed while running in the
@@ -43,6 +60,7 @@ class MyApp extends StatelessWidget {
           ],
           supportedLocales: const [
             Locale('en', ''), // English, no country code
+            Locale('de', ''),
           ],
 
           // Use AppLocalizations to configure the correct application title
@@ -58,26 +76,8 @@ class MyApp extends StatelessWidget {
           // SettingsController to display the correct theme.
           theme: ThemeData(),
           darkTheme: ThemeData.dark(),
-          themeMode: settingsController.themeMode,
+          themeMode: context.read<SettingsController>().themeMode,
 
-          // Define a function to handle named routes in order to support
-          // Flutter web url navigation and deep linking.
-          onGenerateRoute: (RouteSettings routeSettings) {
-            return MaterialPageRoute<void>(
-              settings: routeSettings,
-              builder: (BuildContext context) {
-                switch (routeSettings.name) {
-                  case SettingsView.routeName:
-                    return SettingsView(controller: settingsController);
-                  case SampleItemDetailsView.routeName:
-                    return const SampleItemDetailsView();
-                  case SampleItemListView.routeName:
-                  default:
-                    return const SampleItemListView();
-                }
-              },
-            );
-          },
         );
       },
     );
