@@ -7,5 +7,6 @@
   "darkTheme": "Dunkel",
   "language": "Sprache",
   "language_de": "Deutsch",
-  "language_en": "Englisch"
+  "language_en": "Englisch",
+  "doneButtonLabel": "Fertig"
 }

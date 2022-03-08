@@ -10,5 +10,6 @@
   "darkTheme": "Dark",
   "language": "Language",
   "language_de": "German",
-  "language_en": "English"
+  "language_en": "English",
+  "doneButtonLabel": "Done"
 }

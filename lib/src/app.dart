@@ -6,8 +6,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shopper/src/home/home_screen.dart';
 
-import 'sample_feature/sample_item_details_view.dart';
-import 'sample_feature/sample_item_list_view.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -20,9 +18,6 @@ class ShopperApp extends StatelessWidget {
   final _router = GoRouter(routes: [
     GoRoute(path: '/', name: 'home', builder: (context, state) {
       return const HomeScreen();
-    }),
-    GoRoute(path: '/details', builder: (context, state) {
-      return const SampleItemDetailsView();
     }),
     GoRoute(path: '/settings', name: 'settings', builder: (context, state) {
       return SettingsView(controller: context.read<SettingsController>());
