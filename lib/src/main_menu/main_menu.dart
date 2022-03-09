@@ -17,7 +17,7 @@ class MenuList extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
 
                   image: const DecorationImage(
-                      image: AssetImage("assets/images/shopper-1080.png"))),
+                      image: AssetImage("assets/images/shopper-256.png"))),
               child: Align(
                 alignment: Alignment.bottomLeft,
                 child: Text(
