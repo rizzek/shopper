@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopper/src/model/drift/drift_models.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
 import 'src/settings/settings_service.dart';
 
 void main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   // Set up the SettingsController, which will glue user settings to multiple
   // Flutter Widgets.
@@ -21,6 +21,10 @@ void main() async {
   // SettingsView.
   runApp(
     MultiProvider(providers: [
+      Provider<DriftShopperDatabase>(
+        create: (context) => DriftShopperDatabase(),
+        dispose: (context, db) => db.close(),
+      ),
       ChangeNotifierProvider(
         create: (context) => settingsController,
       )
