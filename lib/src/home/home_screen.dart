@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:reorderables/reorderables.dart';
+import 'package:shopper/src/home/editable_shopping_list_tile.dart';
+import 'package:shopper/src/home/shopping_list_tile.dart';
 import 'package:shopper/src/main_menu/main_menu.dart';
 import 'package:shopper/src/model/shopping_item.dart';
 
@@ -12,20 +15,16 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<ShoppingItem> items = [
-    ShoppingItem("Äpfel 🍎", false, 0),
-    ShoppingItem("Bananen 🍌", false, 1),
-    ShoppingItem("Honigkuchen 🍯", false, 2),
-    ShoppingItem("Bier 🍺", false, 3),
-    ShoppingItem("Saft 🧃", false, 4),
-  ];
+  final List<ShoppingItem> items = List.generate(
+    20,
+        (index) => ShoppingItem("Debug Shopping Item $index", false, index),
+  );
 
   bool _editMode = false;
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-
       final width = constraints.maxWidth;
 
       final Drawer? drawer;
@@ -35,13 +34,20 @@ class _HomeScreenState extends State<HomeScreen> {
         drawer = null;
         body = Row(
           children: [
-            const SizedBox(child: MenuList(), width: 250,),
-            VerticalDivider(width: 1,),
+            const SizedBox(
+              child: MenuList(),
+              width: 250,
+            ),
+            VerticalDivider(
+              width: 1,
+            ),
             Expanded(child: _buildShoppingList()),
           ],
         );
       } else {
-        drawer = const Drawer(child: MenuList(),);
+        drawer = const Drawer(
+          child: MenuList(),
+        );
         body = _buildShoppingList();
       }
 
@@ -59,7 +65,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             if (_editMode)
               TextButton(
-                child: Text(AppLocalizations.of(context)!.doneButtonLabel),
+                child: Text(AppLocalizations.of(context)!.doneButtonLabel,
+                    style: TextStyle(
+                        color: Theme
+                            .of(context)
+                            .colorScheme
+                            .onPrimary)),
                 onPressed: () {
                   _toggleEditMode();
                 },
@@ -72,40 +83,88 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildShoppingList() {
-    return ReorderableListView.builder(
-        onReorder: (oldIndex, newIndex) {
+    return CustomScrollView(
+      slivers: [
+        ReorderableSliverList(
+            delegate: ReorderableSliverChildBuilderDelegate(
+          (context, index) {
+                  final item = items[index];
+                  if (_editMode) {
+                    return EditableShoppingListTile(
+                      key: ValueKey(item.id),
+                      shoppingItem: item,
+                      onEnter: () {},
+                    );
+                  } else {
+                    return ShoppingListTile(
+                        key: ValueKey(item.id), shoppingItem: item);
+                  }
+          },
+          childCount: items.length,
+        ), onReorder: (oldIndex, newIndex) {
           if (oldIndex < newIndex) {
             newIndex -= 1;
           }
           final item = items.removeAt(oldIndex);
           items.insert(newIndex, item);
+        }),
+        if (_editMode)
+          SliverToBoxAdapter(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 12.0, left: 72.0, bottom: 48.0),
+                child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        items.add(ShoppingItem("", false, items.length));
+                      });
+                    },
+                    child: const Text("add")),
+              ),
+            ),
+          ),
 
-        },
-        itemCount: items.length,
-        itemBuilder: (context, index) {
-          final item = items[index];
-          final TextStyle style;
-          if (item.completed) {
-            style = const TextStyle(decoration: TextDecoration.lineThrough);
-          } else {
-            style = const TextStyle();
-          }
-
-          return CheckboxListTile(
-
-            key: ValueKey(item.id),
-            title: Text(item.label, style: style,),
-            value: item.completed,
-            onChanged: (checked) {
-              setState(() {
-                item.completed = checked ?? false;
-              });
-            },
-            controlAffinity: ListTileControlAffinity.leading,
-          );
-        });
+        // ReorderableListView.builder(
+        //     shrinkWrap: true,
+        //     physics: const ClampingScrollPhysics(),
+        //     onReorder: (oldIndex, newIndex) {
+        //       if (oldIndex < newIndex) {
+        //         newIndex -= 1;
+        //       }
+        //       final item = items.removeAt(oldIndex);
+        //       items.insert(newIndex, item);
+        //     },
+        //     itemCount: items.length,
+        //     itemBuilder: (context, index) {
+        //       final item = items[index];
+        //       if (_editMode) {
+        //         return EditableShoppingListTile(
+        //           key: ValueKey(item.id),
+        //           shoppingItem: item,
+        //           onEnter: () {},
+        //         );
+        //       } else {
+        //         return ShoppingListTile(
+        //             key: ValueKey(item.id), shoppingItem: item);
+        //       }
+        //     }),
+        // if (_editMode)
+        //   Center(
+        //     child: Padding(
+        //       padding: const EdgeInsets.only(bottom: 48.0),
+        //       child: ElevatedButton(
+        //           onPressed: () {
+        //             setState(() {
+        //               items.add(ShoppingItem("", false, items.length));
+        //             });
+        //           },
+        //           child: const Text("add")),
+        //     ),
+        //   ),
+      ],
+    );
   }
-
 
   void _toggleEditMode() {
     setState(() {

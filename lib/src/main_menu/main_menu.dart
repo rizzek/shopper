@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 
 class MenuList extends StatelessWidget {
   const MenuList({Key? key}) : super(key: key);
@@ -22,13 +23,15 @@ class MenuList extends StatelessWidget {
                 alignment: Alignment.bottomLeft,
                 child: Text(
                   AppLocalizations.of(context)!.appTitle,
-                  style: Theme.of(context).textTheme.headline5?.copyWith(shadows: [const Shadow(color: Colors.black, blurRadius: 3.0)]),
+                  style: Theme.of(context).textTheme.headline5?.copyWith(color: Theme.of(context).colorScheme.onPrimary, shadows: [const Shadow(color: Colors.black, blurRadius: 3.0)]),
                 ),
               ),
             ),
           ),
           ListTile(title: Text('Shopping List'), onTap: () {},),
-          ListTile(title: Text(AppLocalizations.of(context)!.settings), onTap: () {},),
+          ListTile(title: Text(AppLocalizations.of(context)!.settings), onTap: () {
+            context.pushNamed("settings");
+          },),
           ListTile(title: Text('About'), onTap: () {},),
         ],
       ),
