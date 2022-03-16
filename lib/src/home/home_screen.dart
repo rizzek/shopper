@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
+import 'package:shopper/src/app_state/shopper_app_state.dart';
 import 'package:shopper/src/home/editable_shopping_list_tile.dart';
 import 'package:shopper/src/home/shopping_list_tile.dart';
 import 'package:shopper/src/main_menu/main_menu.dart';
@@ -15,10 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final List<ShoppingItem> items = List.generate(
-    20,
-        (index) => ShoppingItem("Debug Shopping Item $index", false, index),
-  );
 
   bool _editMode = false;
 
@@ -38,17 +36,17 @@ class _HomeScreenState extends State<HomeScreen> {
               child: MenuList(),
               width: 250,
             ),
-            VerticalDivider(
+            const VerticalDivider(
               width: 1,
             ),
-            Expanded(child: _buildShoppingList()),
+            Expanded(child: _buildShoppingList(context)),
           ],
         );
       } else {
         drawer = const Drawer(
           child: MenuList(),
         );
-        body = _buildShoppingList();
+        body = _buildShoppingList(context);
       }
 
       return Scaffold(
@@ -82,87 +80,99 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
-  Widget _buildShoppingList() {
-    return CustomScrollView(
-      slivers: [
-        ReorderableSliverList(
-            delegate: ReorderableSliverChildBuilderDelegate(
-          (context, index) {
-                  final item = items[index];
-                  if (_editMode) {
-                    return EditableShoppingListTile(
-                      key: ValueKey(item.id),
-                      shoppingItem: item,
-                      onEnter: () {},
-                    );
-                  } else {
-                    return ShoppingListTile(
-                        key: ValueKey(item.id), shoppingItem: item);
-                  }
-          },
-          childCount: items.length,
-        ), onReorder: (oldIndex, newIndex) {
-          if (oldIndex < newIndex) {
-            newIndex -= 1;
-          }
-          final item = items.removeAt(oldIndex);
-          items.insert(newIndex, item);
-        }),
-        if (_editMode)
-          SliverToBoxAdapter(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 12.0, left: 72.0, bottom: 48.0),
-                child: ElevatedButton(
-                    onPressed: () {
-                      setState(() {
-                        items.add(ShoppingItem("", false, items.length));
-                      });
-                    },
-                    child: const Text("add")),
-              ),
-            ),
-          ),
+  Widget _buildShoppingList(BuildContext context) {
+    return Consumer<ShopperAppState>(
+      builder: (context, state, child) {
+        final items = state.listItems;
+        return CustomScrollView(
+          slivers: [
+            ReorderableSliverList(
+                delegate: ReorderableSliverChildBuilderDelegate(
+                      (context, index) {
+                    final item = items[index];
+                    if (_editMode) {
+                      return EditableShoppingListTile(
+                        key: ValueKey(item.id),
+                        shoppingItem: item,
+                        onEnter: () {},
+                      );
+                    } else {
+                      return ShoppingListTile(
+                          key: ValueKey(item.id), shoppingItem: item);
+                    }
+                  },
+                  childCount: items.length,
+                ), onReorder: (oldIndex, newIndex) {
+              // if (oldIndex < newIndex) {
+              //   newIndex -= 1;
+              // }
+              // final item = items.removeAt(oldIndex);
+              // items.insert(newIndex, item);
 
-        // ReorderableListView.builder(
-        //     shrinkWrap: true,
-        //     physics: const ClampingScrollPhysics(),
-        //     onReorder: (oldIndex, newIndex) {
-        //       if (oldIndex < newIndex) {
-        //         newIndex -= 1;
-        //       }
-        //       final item = items.removeAt(oldIndex);
-        //       items.insert(newIndex, item);
-        //     },
-        //     itemCount: items.length,
-        //     itemBuilder: (context, index) {
-        //       final item = items[index];
-        //       if (_editMode) {
-        //         return EditableShoppingListTile(
-        //           key: ValueKey(item.id),
-        //           shoppingItem: item,
-        //           onEnter: () {},
-        //         );
-        //       } else {
-        //         return ShoppingListTile(
-        //             key: ValueKey(item.id), shoppingItem: item);
-        //       }
-        //     }),
-        // if (_editMode)
-        //   Center(
-        //     child: Padding(
-        //       padding: const EdgeInsets.only(bottom: 48.0),
-        //       child: ElevatedButton(
-        //           onPressed: () {
-        //             setState(() {
-        //               items.add(ShoppingItem("", false, items.length));
-        //             });
-        //           },
-        //           child: const Text("add")),
-        //     ),
-        //   ),
-      ],
+              final oldItem = items[oldIndex];
+              final newItem = items[newIndex];
+
+              print("old item: ${oldItem.label}, new item: ${newItem.label}");
+
+              context.read<ShopperAppState>().swapItems(oldItem, oldIndex, newItem, newIndex);
+
+
+            }),
+            if (_editMode)
+              SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 12.0, left: 72.0, bottom: 48.0),
+                    child: ElevatedButton(
+                        onPressed: () {
+                          context.read<ShopperAppState>().addItem();
+                        },
+                        child: const Text("add")),
+                  ),
+                ),
+              ),
+
+            // ReorderableListView.builder(
+            //     shrinkWrap: true,
+            //     physics: const ClampingScrollPhysics(),
+            //     onReorder: (oldIndex, newIndex) {
+            //       if (oldIndex < newIndex) {
+            //         newIndex -= 1;
+            //       }
+            //       final item = items.removeAt(oldIndex);
+            //       items.insert(newIndex, item);
+            //     },
+            //     itemCount: items.length,
+            //     itemBuilder: (context, index) {
+            //       final item = items[index];
+            //       if (_editMode) {
+            //         return EditableShoppingListTile(
+            //           key: ValueKey(item.id),
+            //           shoppingItem: item,
+            //           onEnter: () {},
+            //         );
+            //       } else {
+            //         return ShoppingListTile(
+            //             key: ValueKey(item.id), shoppingItem: item);
+            //       }
+            //     }),
+            // if (_editMode)
+            //   Center(
+            //     child: Padding(
+            //       padding: const EdgeInsets.only(bottom: 48.0),
+            //       child: ElevatedButton(
+            //           onPressed: () {
+            //             setState(() {
+            //               items.add(ShoppingItem("", false, items.length));
+            //             });
+            //           },
+            //           child: const Text("add")),
+            //     ),
+            //   ),
+          ],
+        );
+      },
     );
   }
 

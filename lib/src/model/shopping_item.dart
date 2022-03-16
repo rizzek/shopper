@@ -6,5 +6,5 @@ class ShoppingItem {
 
   bool completed;
 
-  int id;
+  int? id;
 }

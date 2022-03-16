@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shopper/src/model/drift/drift_models.dart';
+import 'package:shopper/src/app_state/shopper_app_state.dart';
+import 'package:shopper/src/repositories/drift/drift_models.dart';
 
 import 'src/app.dart';
 import 'src/settings/settings_controller.dart';
@@ -21,9 +22,12 @@ void main() async {
   // SettingsView.
   runApp(
     MultiProvider(providers: [
-      Provider<DriftShopperDatabase>(
-        create: (context) => DriftShopperDatabase(),
-        dispose: (context, db) => db.close(),
+      ChangeNotifierProvider<ShopperAppState>(
+        create: (context) {
+          final state = ShopperAppState();
+          state.init();
+          return state;
+        },
       ),
       ChangeNotifierProvider(
         create: (context) => settingsController,

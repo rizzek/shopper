@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:drift/drift.dart';
@@ -48,22 +49,28 @@ class DriftShopperDatabase extends _$DriftShopperDatabase {
   Future<List<DriftShoppingList>> get allShoppingLists =>
       select(driftShoppingLists).get();
 
-  Future<DriftShoppingList> get firstShoppingList =>
-      (select(driftShoppingLists)..limit(1)).getSingle();
+  Future<DriftShoppingList?> get firstShoppingList =>
+      (select(driftShoppingLists)..limit(1))
+          .getSingle()
+          .then((value) => Future<DriftShoppingList?>.value(value))
+          .catchError((e) => null);
 
-  Future<List<DriftShoppingItem>> getItemsForList(
-      DriftShoppingList shoppingList) {
+  Future<DriftShoppingList> getList(int id) {
+    return (select(driftShoppingLists)..where((tbl) => tbl.id.equals(id)))
+        .getSingle();
+  }
+
+  Future<List<DriftShoppingItem>> getItemsForList(int listId) {
     return (select(driftShoppingItems)
-          ..where((tbl) => tbl.listId.equals(shoppingList.id))
+          ..where((tbl) => tbl.listId.equals(listId))
           ..orderBy([(tbl) => OrderingTerm(expression: tbl.listId)]))
         .get();
   }
 
-  Stream<List<DriftShoppingItem>> watchItemsForList(
-      DriftShoppingList shoppingList) {
+  Stream<List<DriftShoppingItem>> watchItemsForList(int listId) {
     return (select(driftShoppingItems)
-      ..where((tbl) => tbl.listId.equals(shoppingList.id))
-      ..orderBy([(tbl) => OrderingTerm(expression: tbl.listId)]))
+          ..where((tbl) => tbl.listId.equals(listId))
+          ..orderBy([(tbl) => OrderingTerm(expression: tbl.listId)]))
         .watch();
   }
 
@@ -89,11 +96,13 @@ class DriftShopperDatabase extends _$DriftShopperDatabase {
   }
 
   Future updateItems(List<DriftShoppingItem> items) async {
-    await batch(
-      (batch) => {
-        for (var item in items) {batch.update(driftShoppingItems, item)}
-      },
-    );
+    return transaction(() async {
+      for (var item in items) {
+        await (update(driftShoppingItems)
+              ..where((tbl) => tbl.id.equals(item.id)))
+            .write(item);
+      }
+    });
   }
 
   Future deleteItem(DriftShoppingItem item) {

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopper/src/app_state/shopper_app_state.dart';
 import 'package:shopper/src/model/shopping_item.dart';
 
 class EditableShoppingListTile extends StatefulWidget {
@@ -59,6 +61,7 @@ class _EditableShoppingListTileState extends State<EditableShoppingListTile> {
               print("Value changed!");
             },
             onSubmitted: (text) {
+              context.read<ShopperAppState>().updateItem(widget.shoppingItem);
               print("Enter pressed!");
             },
           ),
