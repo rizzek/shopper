@@ -35,16 +35,8 @@ class DriftRepository extends ShopperRepository {
   }
 
   @override
-  Future<void> updateShoppingItems(
-      {required ShoppingItem firstItem,
-      required int firstPosition,
-      required ShoppingItem secondItem,
-      required int secondPosition,
-      required int listId}) async {
-    await _db.updateItems([
-      DriftShoppingItem(id: firstItem.id!, listId: listId, listPosition: firstPosition, label: firstItem.label, completed: firstItem.completed),
-      DriftShoppingItem(id: secondItem.id!, listId: listId, listPosition: secondPosition, label: secondItem.label, completed: secondItem.completed),
-    ]);
+  Future updateItemPositions({required List<ShoppingItem> items, required int listId}) async {
+    _db.updatePositions(_modelToDriftItems(items, listId));
   }
 
   @override
@@ -109,5 +101,20 @@ class DriftRepository extends ShopperRepository {
       list.items.add(_driftItemToModel(driftItem));
     }
     return list;
+  }
+
+  List<DriftShoppingItem> _modelToDriftItems(List<ShoppingItem> items, int listId) {
+    List<DriftShoppingItem> result = [];
+    var index = 0;
+    for (var item in items) {
+      result.add(DriftShoppingItem(id: item.id!, listId: listId, listPosition: index, label: item.label, completed: item.completed));
+      index++;
+    }
+    return result;
+  }
+
+  @override
+  Future deleteItem({required ShoppingItem item}) async {
+    await _db.deleteItem(item.id!);
   }
 }

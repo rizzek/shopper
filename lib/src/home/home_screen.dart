@@ -17,7 +17,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   bool _editMode = false;
 
   @override
@@ -65,10 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               TextButton(
                 child: Text(AppLocalizations.of(context)!.doneButtonLabel,
                     style: TextStyle(
-                        color: Theme
-                            .of(context)
-                            .colorScheme
-                            .onPrimary)),
+                        color: Theme.of(context).colorScheme.onPrimary)),
                 onPressed: () {
                   _toggleEditMode();
                 },
@@ -88,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
           slivers: [
             ReorderableSliverList(
                 delegate: ReorderableSliverChildBuilderDelegate(
-                      (context, index) {
+                  (context, index) {
                     final item = items[index];
                     if (_editMode) {
                       return EditableShoppingListTile(
@@ -102,28 +98,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
                   },
                   childCount: items.length,
-                ), onReorder: (oldIndex, newIndex) {
-              // if (oldIndex < newIndex) {
-              //   newIndex -= 1;
-              // }
-              // final item = items.removeAt(oldIndex);
-              // items.insert(newIndex, item);
+                ),
+                onReorder: (oldIndex, newIndex) {
+                  final item = items.removeAt(oldIndex);
+                  items.insert(newIndex, item);
 
-              final oldItem = items[oldIndex];
-              final newItem = items[newIndex];
-
-              print("old item: ${oldItem.label}, new item: ${newItem.label}");
-
-              context.read<ShopperAppState>().swapItems(oldItem, oldIndex, newItem, newIndex);
-
-
-            }),
+                  context.read<ShopperAppState>().updateItemPositions(items);
+                }),
             if (_editMode)
               SliverToBoxAdapter(
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 12.0, left: 72.0, bottom: 48.0),
+                    padding: const EdgeInsets.only(
+                        top: 12.0, left: 72.0, bottom: 48.0),
                     child: ElevatedButton(
                         onPressed: () {
                           context.read<ShopperAppState>().addItem();

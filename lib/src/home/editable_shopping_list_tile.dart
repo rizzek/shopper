@@ -4,7 +4,8 @@ import 'package:shopper/src/app_state/shopper_app_state.dart';
 import 'package:shopper/src/model/shopping_item.dart';
 
 class EditableShoppingListTile extends StatefulWidget {
-  EditableShoppingListTile({Key? key, required this.shoppingItem, required this.onEnter})
+  EditableShoppingListTile(
+      {Key? key, required this.shoppingItem, required this.onEnter})
       : super(key: key);
 
   ShoppingItem shoppingItem;
@@ -43,14 +44,13 @@ class _EditableShoppingListTileState extends State<EditableShoppingListTile> {
       style = const TextStyle();
     }
 
-
     return CheckboxListTile(
       title: Align(
         alignment: Alignment.centerLeft,
         child: SizedBox(
           width: 400,
           child: TextField(
-            controller:_controller,
+            controller: _controller,
             focusNode: _focusNode,
             style: style,
             // decoration: InputDecoration(
@@ -58,11 +58,7 @@ class _EditableShoppingListTileState extends State<EditableShoppingListTile> {
             // ),
             onChanged: (text) {
               widget.shoppingItem.label = text;
-              print("Value changed!");
-            },
-            onSubmitted: (text) {
               context.read<ShopperAppState>().updateItem(widget.shoppingItem);
-              print("Enter pressed!");
             },
           ),
         ),
@@ -71,6 +67,13 @@ class _EditableShoppingListTileState extends State<EditableShoppingListTile> {
       // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0), side: BorderSide(color: Colors.red)),
       onChanged: null,
       controlAffinity: ListTileControlAffinity.leading,
+      secondary: IconButton(
+        icon: const Icon(Icons.delete),
+        color: Colors.red,
+        onPressed: () {
+          context.read<ShopperAppState>().deleteItem(widget.shoppingItem);
+        },
+      ),
     );
   }
 }

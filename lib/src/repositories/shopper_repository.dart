@@ -21,12 +21,9 @@ abstract class ShopperRepository {
   Future<void> updateShoppingItem(
       {required ShoppingItem item, required int listId, required int position});
 
-  Future<void> updateShoppingItems(
-      {required ShoppingItem firstItem,
-        required int firstPosition,
-        required ShoppingItem secondItem,
-        required int secondPosition,
-        required int listId});
+  Future updateItemPositions({required List<ShoppingItem> items, required int listId});
+
+  Future deleteItem({required ShoppingItem item});
 
   void close();
 }

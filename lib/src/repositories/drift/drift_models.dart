@@ -70,7 +70,7 @@ class DriftShopperDatabase extends _$DriftShopperDatabase {
   Stream<List<DriftShoppingItem>> watchItemsForList(int listId) {
     return (select(driftShoppingItems)
           ..where((tbl) => tbl.listId.equals(listId))
-          ..orderBy([(tbl) => OrderingTerm(expression: tbl.listId)]))
+          ..orderBy([(tbl) => OrderingTerm(expression: tbl.listPosition)]))
         .watch();
   }
 
@@ -105,7 +105,17 @@ class DriftShopperDatabase extends _$DriftShopperDatabase {
     });
   }
 
-  Future deleteItem(DriftShoppingItem item) {
-    return delete(driftShoppingItems).delete(item);
+  Future updatePositions(List<DriftShoppingItem> items) async {
+    return transaction(() async {
+      for (var item in items) {
+        await (update(driftShoppingItems)
+          ..where((tbl) => tbl.id.equals(item.id)))
+            .write(DriftShoppingItemsCompanion(listPosition: Value(item.listPosition)));
+      }
+    });
+  }
+
+  Future deleteItem(int itemId) async {
+    return (delete(driftShoppingItems)..where((tbl) => tbl.id.equals(itemId))).go();
   }
 }

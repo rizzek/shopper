@@ -27,6 +27,7 @@ class ShopperAppState extends ChangeNotifier {
     }
     _listItems = _shopperRepository.watchItemsForList(list: _list);
     _listItemsSubscription = _listItems?.listen((newItemList) {
+      print("Got new state from drift: $newItemList");
       listItems = newItemList;
       notifyListeners();
     });
@@ -40,14 +41,19 @@ class ShopperAppState extends ChangeNotifier {
   }
 
   void addItem({int? position}) {
-    _shopperRepository.createShoppingItem(item: ShoppingItem('', false, null), listId: _list.id!, position: position ?? _list.items.length);
+    _shopperRepository.createShoppingItem(item: ShoppingItem('', false, null), listId: _list.id!, position: position ?? listItems.length);
   }
 
   void updateItem(ShoppingItem item, {int? position}) {
-    _shopperRepository.updateShoppingItem(item: item, listId: _list.id!, position: position ?? _list.items.indexOf(item));
+    _shopperRepository.updateShoppingItem(item: item, listId: _list.id!, position: position ?? listItems.indexWhere((listItem) => listItem.id == item.id));
   }
 
-  void swapItems(ShoppingItem firstItem, int firstPosition, ShoppingItem secondItem, int secondPosition) {
-    _shopperRepository.updateShoppingItems(firstItem: firstItem, firstPosition: secondPosition, secondItem: secondItem, secondPosition: firstPosition, listId: _list.id!);
+  void updateItemPositions(List<ShoppingItem> items) {
+    _shopperRepository.updateItemPositions(items: items, listId: _list.id!);
+  }
+
+  void deleteItem(ShoppingItem item) async {
+    await _shopperRepository.deleteItem(item: item);
+    updateItemPositions(listItems);
   }
 }
