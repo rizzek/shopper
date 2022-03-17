@@ -39,9 +39,12 @@ Building Flutter web apps with "canvaskit" might bring some advantages but with 
 additional assets being loaded from Google Fonts and unpckg.com.
 
 You can simply prevent this by choosing "html" as the default renderer:
+
     flutter build web --web-renderer html
+    
 
 Another way of at least getting rid of the unpckg.com resource call is to specify a custom location for CanvasKit. Fortunately, the build output of Flutter web already contains a copy of CanvasKit. You can specify it like this:
+
     flutter build web --dart-define=FLUTTER_WEB_CANVASKIT_URL=/canvaskit/
 
 For more information about web renderers for Flutter please
