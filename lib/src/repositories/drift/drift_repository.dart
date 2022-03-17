@@ -3,8 +3,10 @@ import 'package:shopper/src/model/shopping_list.dart';
 import 'package:shopper/src/repositories/drift/drift_models.dart';
 import 'package:shopper/src/repositories/shopper_repository.dart';
 
+import 'shared.dart';
+
 class DriftRepository extends ShopperRepository {
-  final _db = DriftShopperDatabase();
+  final _db = openConnection();
 
   @override
   Future<ShoppingList> createShoppingList({required String title}) async {
