@@ -27,6 +27,8 @@ class ShopperApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(context.read<SettingsController>().locale);
+    print(Intl.getCurrentLocale());
     // Glue the SettingsController to the MaterialApp.
     //
     // The AnimatedBuilder Widget listens to the SettingsController for changes.

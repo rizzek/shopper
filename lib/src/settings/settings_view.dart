@@ -1,5 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:shopper/src/app_state/remote_credential_store.dart';
+import 'package:shopper/src/app_state/shopper_app_state.dart';
+import 'package:shopper/src/settings/sync_selection.dart';
 
 import 'settings_controller.dart';
 
@@ -14,6 +20,7 @@ class SettingsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final syncSettings = context.read<ShopperAppState>().getSyncSettings();
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.settings),
@@ -56,16 +63,75 @@ class SettingsView extends StatelessWidget {
                 onChanged: controller.updatePreferredLocale,
                 items: [
                   DropdownMenuItem(
-                      value: "de", child: Text(AppLocalizations.of(context)!.language_de)),
+                      value: "de",
+                      child: Text(AppLocalizations.of(context)!.language_de)),
                   DropdownMenuItem(
-                      value: "en", child: Text(AppLocalizations.of(context)!.language_en))
+                      value: "en",
+                      child: Text(AppLocalizations.of(context)!.language_en))
                 ],
               ),
             ),
+            FutureBuilder(
+                future: syncSettings,
+                builder: (context, snapShot) {
+                  if (snapShot.hasData) {
+                    final StorageSettings syncSettingsData = snapShot.data as StorageSettings;
+
+                    final String buttonLabel;
+                    final String subtitle;
+
+                    switch (syncSettingsData.store) {
+
+                      case RemoteStore.webdav:
+                        buttonLabel = AppLocalizations.of(context)!.syncButton_change;
+                        subtitle = AppLocalizations.of(context)!.syncService_webdav;
+                        break;
+                      case RemoteStore.nextcloud:
+                        buttonLabel = AppLocalizations.of(context)!.syncButton_change;
+                        subtitle = AppLocalizations.of(context)!.syncService_nextcloud;
+                        break;
+                      case RemoteStore.none:
+                        buttonLabel = AppLocalizations.of(context)!.syncButton_setup;
+                        subtitle = AppLocalizations.of(context)!.syncService_none;
+                        break;
+                    }
+
+
+                    return ListTile(
+                      title: Text(AppLocalizations.of(context)!.sync),
+                      subtitle: Text(subtitle),
+                      trailing: ElevatedButton(
+                        child: Text(buttonLabel),
+                        onPressed: () {
+                          if (Platform.isAndroid || Platform.isIOS) {
+                            showModalBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return SyncSelectionDialog(storedSettings: syncSettingsData,);
+                                });
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return SimpleDialog(
+                                      children: [SyncSelectionDialog(storedSettings: syncSettingsData,)]);
+                                });
+                          }
+                        },
+                      ),
+                    );
+                  } else {
+                    return const ListTile(
+                      title: const SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: CircularProgressIndicator()),
+                    );
+                  }
+                }),
           ]).toList(),
         ),
       ),
     );
   }
-
 }

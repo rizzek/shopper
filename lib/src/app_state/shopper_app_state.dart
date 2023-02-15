@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shopper/src/app_state/remote_credential_store.dart';
 import 'package:shopper/src/model/shopping_item.dart';
 import 'package:shopper/src/model/shopping_list.dart';
 import 'package:shopper/src/repositories/drift/drift_repository.dart';
@@ -8,6 +9,8 @@ import 'package:shopper/src/repositories/shopper_repository.dart';
 
 class ShopperAppState extends ChangeNotifier {
   final ShopperRepository _shopperRepository = DriftRepository();
+
+  final RemoteCredentialStore _remoteCredentialStore = RemoteCredentialStore();
 
   late ShoppingList _list;
 
@@ -56,4 +59,13 @@ class ShopperAppState extends ChangeNotifier {
     await _shopperRepository.deleteItem(item: item);
     updateItemPositions(listItems);
   }
+
+  Future<StorageSettings> getSyncSettings() {
+    return _remoteCredentialStore.getSettings();
+  }
+
+  Future saveSyncSettings(RemoteStore store, String url, String basePath, String username, String password) {
+    return _remoteCredentialStore.storeSettings(store, url, username, password);
+  }
+
 }

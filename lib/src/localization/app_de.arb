@@ -8,5 +8,19 @@
   "language": "Sprache",
   "language_de": "Deutsch",
   "language_en": "Englisch",
-  "doneButtonLabel": "Fertig"
+  "doneButtonLabel": "Fertig",
+  "sync": "Synchronisierung",
+  "syncService_webdav":"WebDAV",
+  "syncService_nextcloud": "Nextcloud",
+  "syncService_none": "Noch nicht eingerichtet",
+  "syncButton_setup": "Einrichten",
+  "syncButton_change": "Ändern",
+  "syncButton_test": "Verbindung testen",
+  "webdavUrl": "WebDAV URL",
+  "nextcloudUrl": "NextCloud URL",
+  "username": "Benutzername",
+  "password":"Passwort",
+  "addItemLabel": "Hinzufügen",
+  "cancel": "Abbrechen",
+  "save": "Speichern"
 }
