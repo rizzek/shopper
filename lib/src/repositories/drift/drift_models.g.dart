@@ -2,26 +2,78 @@
 
 part of 'drift_models.dart';
 
-// **************************************************************************
-// MoorGenerator
-// **************************************************************************
+// ignore_for_file: type=lint
+class $DriftShoppingListsTable extends DriftShoppingLists
+    with TableInfo<$DriftShoppingListsTable, DriftShoppingList> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $DriftShoppingListsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _titleMeta = const VerificationMeta('title');
+  @override
+  late final GeneratedColumn<String> title =
+      GeneratedColumn<String>('title', aliasedName, false,
+          additionalChecks: GeneratedColumn.checkTextLength(
+            minTextLength: 1,
+          ),
+          type: DriftSqlType.string,
+          requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [id, title];
+  @override
+  String get aliasedName => _alias ?? 'drift_shopping_lists';
+  @override
+  String get actualTableName => 'drift_shopping_lists';
+  @override
+  VerificationContext validateIntegrity(Insertable<DriftShoppingList> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('title')) {
+      context.handle(
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    } else if (isInserting) {
+      context.missing(_titleMeta);
+    }
+    return context;
+  }
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  DriftShoppingList map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DriftShoppingList(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      title: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}title'])!,
+    );
+  }
+
+  @override
+  $DriftShoppingListsTable createAlias(String alias) {
+    return $DriftShoppingListsTable(attachedDatabase, alias);
+  }
+}
+
 class DriftShoppingList extends DataClass
     implements Insertable<DriftShoppingList> {
   final int id;
   final String title;
-  DriftShoppingList({required this.id, required this.title});
-  factory DriftShoppingList.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return DriftShoppingList(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
-    );
-  }
+  const DriftShoppingList({required this.id, required this.title});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -127,47 +179,89 @@ class DriftShoppingListsCompanion extends UpdateCompanion<DriftShoppingList> {
   }
 }
 
-class $DriftShoppingListsTable extends DriftShoppingLists
-    with TableInfo<$DriftShoppingListsTable, DriftShoppingList> {
+class $DriftShoppingItemsTable extends DriftShoppingItems
+    with TableInfo<$DriftShoppingItemsTable, DriftShoppingItem> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $DriftShoppingListsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
+  $DriftShoppingItemsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
       'id', aliasedName, false,
-      type: const IntType(),
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
       requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _titleMeta = const VerificationMeta('title');
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _listIdMeta = const VerificationMeta('listId');
   @override
-  late final GeneratedColumn<String?> title =
-      GeneratedColumn<String?>('title', aliasedName, false,
-          additionalChecks: GeneratedColumn.checkTextLength(
-            minTextLength: 1,
-          ),
-          type: const StringType(),
-          requiredDuringInsert: true);
+  late final GeneratedColumn<int> listId = GeneratedColumn<int>(
+      'list_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _listPositionMeta =
+      const VerificationMeta('listPosition');
   @override
-  List<GeneratedColumn> get $columns => [id, title];
+  late final GeneratedColumn<int> listPosition = GeneratedColumn<int>(
+      'list_position', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _labelMeta = const VerificationMeta('label');
   @override
-  String get aliasedName => _alias ?? 'drift_shopping_lists';
+  late final GeneratedColumn<String> label = GeneratedColumn<String>(
+      'label', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _completedMeta =
+      const VerificationMeta('completed');
   @override
-  String get actualTableName => 'drift_shopping_lists';
+  late final GeneratedColumn<bool> completed =
+      GeneratedColumn<bool>('completed', aliasedName, false,
+          type: DriftSqlType.bool,
+          requiredDuringInsert: true,
+          defaultConstraints: GeneratedColumn.constraintsDependsOnDialect({
+            SqlDialect.sqlite: 'CHECK ("completed" IN (0, 1))',
+            SqlDialect.mysql: '',
+            SqlDialect.postgres: '',
+          }));
   @override
-  VerificationContext validateIntegrity(Insertable<DriftShoppingList> instance,
+  List<GeneratedColumn> get $columns =>
+      [id, listId, listPosition, label, completed];
+  @override
+  String get aliasedName => _alias ?? 'drift_shopping_items';
+  @override
+  String get actualTableName => 'drift_shopping_items';
+  @override
+  VerificationContext validateIntegrity(Insertable<DriftShoppingItem> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     }
-    if (data.containsKey('title')) {
-      context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
+    if (data.containsKey('list_id')) {
+      context.handle(_listIdMeta,
+          listId.isAcceptableOrUnknown(data['list_id']!, _listIdMeta));
     } else if (isInserting) {
-      context.missing(_titleMeta);
+      context.missing(_listIdMeta);
+    }
+    if (data.containsKey('list_position')) {
+      context.handle(
+          _listPositionMeta,
+          listPosition.isAcceptableOrUnknown(
+              data['list_position']!, _listPositionMeta));
+    } else if (isInserting) {
+      context.missing(_listPositionMeta);
+    }
+    if (data.containsKey('label')) {
+      context.handle(
+          _labelMeta, label.isAcceptableOrUnknown(data['label']!, _labelMeta));
+    } else if (isInserting) {
+      context.missing(_labelMeta);
+    }
+    if (data.containsKey('completed')) {
+      context.handle(_completedMeta,
+          completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
+    } else if (isInserting) {
+      context.missing(_completedMeta);
     }
     return context;
   }
@@ -175,14 +269,25 @@ class $DriftShoppingListsTable extends DriftShoppingLists
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  DriftShoppingList map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return DriftShoppingList.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  DriftShoppingItem map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return DriftShoppingItem(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      listId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}list_id'])!,
+      listPosition: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}list_position'])!,
+      label: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}label'])!,
+      completed: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}completed'])!,
+    );
   }
 
   @override
-  $DriftShoppingListsTable createAlias(String alias) {
-    return $DriftShoppingListsTable(attachedDatabase, alias);
+  $DriftShoppingItemsTable createAlias(String alias) {
+    return $DriftShoppingItemsTable(attachedDatabase, alias);
   }
 }
 
@@ -193,28 +298,12 @@ class DriftShoppingItem extends DataClass
   final int listPosition;
   final String label;
   final bool completed;
-  DriftShoppingItem(
+  const DriftShoppingItem(
       {required this.id,
       required this.listId,
       required this.listPosition,
       required this.label,
       required this.completed});
-  factory DriftShoppingItem.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return DriftShoppingItem(
-      id: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
-      listId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}list_id'])!,
-      listPosition: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}list_position'])!,
-      label: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}label'])!,
-      completed: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}completed'])!,
-    );
-  }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -385,109 +474,15 @@ class DriftShoppingItemsCompanion extends UpdateCompanion<DriftShoppingItem> {
   }
 }
 
-class $DriftShoppingItemsTable extends DriftShoppingItems
-    with TableInfo<$DriftShoppingItemsTable, DriftShoppingItem> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $DriftShoppingItemsTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<int?> id = GeneratedColumn<int?>(
-      'id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _listIdMeta = const VerificationMeta('listId');
-  @override
-  late final GeneratedColumn<int?> listId = GeneratedColumn<int?>(
-      'list_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _listPositionMeta =
-      const VerificationMeta('listPosition');
-  @override
-  late final GeneratedColumn<int?> listPosition = GeneratedColumn<int?>(
-      'list_position', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _labelMeta = const VerificationMeta('label');
-  @override
-  late final GeneratedColumn<String?> label = GeneratedColumn<String?>(
-      'label', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _completedMeta = const VerificationMeta('completed');
-  @override
-  late final GeneratedColumn<bool?> completed = GeneratedColumn<bool?>(
-      'completed', aliasedName, false,
-      type: const BoolType(),
-      requiredDuringInsert: true,
-      defaultConstraints: 'CHECK (completed IN (0, 1))');
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, listId, listPosition, label, completed];
-  @override
-  String get aliasedName => _alias ?? 'drift_shopping_items';
-  @override
-  String get actualTableName => 'drift_shopping_items';
-  @override
-  VerificationContext validateIntegrity(Insertable<DriftShoppingItem> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    }
-    if (data.containsKey('list_id')) {
-      context.handle(_listIdMeta,
-          listId.isAcceptableOrUnknown(data['list_id']!, _listIdMeta));
-    } else if (isInserting) {
-      context.missing(_listIdMeta);
-    }
-    if (data.containsKey('list_position')) {
-      context.handle(
-          _listPositionMeta,
-          listPosition.isAcceptableOrUnknown(
-              data['list_position']!, _listPositionMeta));
-    } else if (isInserting) {
-      context.missing(_listPositionMeta);
-    }
-    if (data.containsKey('label')) {
-      context.handle(
-          _labelMeta, label.isAcceptableOrUnknown(data['label']!, _labelMeta));
-    } else if (isInserting) {
-      context.missing(_labelMeta);
-    }
-    if (data.containsKey('completed')) {
-      context.handle(_completedMeta,
-          completed.isAcceptableOrUnknown(data['completed']!, _completedMeta));
-    } else if (isInserting) {
-      context.missing(_completedMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  DriftShoppingItem map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return DriftShoppingItem.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $DriftShoppingItemsTable createAlias(String alias) {
-    return $DriftShoppingItemsTable(attachedDatabase, alias);
-  }
-}
-
 abstract class _$DriftShopperDatabase extends GeneratedDatabase {
-  _$DriftShopperDatabase(QueryExecutor e)
-      : super(SqlTypeSystem.defaultInstance, e);
+  _$DriftShopperDatabase(QueryExecutor e) : super(e);
   late final $DriftShoppingListsTable driftShoppingLists =
       $DriftShoppingListsTable(this);
   late final $DriftShoppingItemsTable driftShoppingItems =
       $DriftShoppingItemsTable(this);
   @override
-  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  Iterable<TableInfo<Table, Object?>> get allTables =>
+      allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities =>
       [driftShoppingLists, driftShoppingItems];
