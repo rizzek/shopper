@@ -1,12 +1,16 @@
 
-import 'package:shopper/src/model/shopping_item.dart';
+import 'package:shopper/src/domain/entities/groceries_item.dart';
+import 'package:shopper/src/domain/entities/groceries_list.dart';
 
-class ShoppingList {
-  ShoppingList({required this.title, this.id});
+class LocalGroceriesList implements GroceriesList {
+  LocalGroceriesList({required this.title, this.id});
 
+  @override
   int? id;
 
+  @override
   String title;
 
-  List<ShoppingItem> items = [];
+  @override
+  List<GroceriesItem> items = [];
 }

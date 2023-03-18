@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopper/src/app_state/remote_credential_store.dart';
 import 'package:shopper/src/app_state/shopper_app_state.dart';
-import 'package:shopper/src/settings/sync_selection.dart';
+import 'package:shopper/src/presentation/settings/sync_selection.dart';
 
 import 'settings_controller.dart';
 

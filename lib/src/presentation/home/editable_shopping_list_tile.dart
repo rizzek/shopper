@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopper/src/app_state/shopper_app_state.dart';
-import 'package:shopper/src/model/shopping_item.dart';
+import 'package:shopper/src/domain/entities/groceries_item.dart';
 
 class EditableShoppingListTile extends StatefulWidget {
   EditableShoppingListTile(
       {Key? key, required this.shoppingItem, required this.onEnter})
       : super(key: key);
 
-  ShoppingItem shoppingItem;
+  GroceriesItem shoppingItem;
 
   VoidCallback onEnter;
 

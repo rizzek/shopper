@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:shopper/src/app_state/shopper_app_state.dart';
-import 'package:shopper/src/home/editable_shopping_list_tile.dart';
-import 'package:shopper/src/home/shopping_list_tile.dart';
-import 'package:shopper/src/main_menu/main_menu.dart';
-import 'package:shopper/src/model/shopping_item.dart';
+import 'package:shopper/src/presentation/home/editable_shopping_list_tile.dart';
+import 'package:shopper/src/presentation/home/shopping_list_tile.dart';
+import 'package:shopper/src/presentation/main_menu/main_menu.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);

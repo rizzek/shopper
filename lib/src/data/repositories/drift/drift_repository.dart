@@ -1,22 +1,24 @@
+import 'package:shopper/src/domain/entities/groceries_item.dart';
+import 'package:shopper/src/domain/entities/groceries_list.dart';
+import 'package:shopper/src/domain/repositories/groceries_repository.dart';
 import 'package:shopper/src/model/shopping_item.dart';
 import 'package:shopper/src/model/shopping_list.dart';
-import 'package:shopper/src/repositories/drift/drift_models.dart';
-import 'package:shopper/src/repositories/shopper_repository.dart';
+import 'package:shopper/src/data/repositories/drift/drift_models.dart';
 
 import 'shared.dart';
 
-class DriftRepository extends ShopperRepository {
+class DriftRepository extends GroceriesRepository {
   final _db = openConnection();
 
   @override
-  Future<ShoppingList> createShoppingList({required String title}) async {
+  Future<GroceriesList> createShoppingList({required String title}) async {
     final id = await _db.createShoppingList(title);
     return getShoppingList(id);
   }
 
   @override
   Future<void> createShoppingItem({
-    required ShoppingItem item,
+    required GroceriesItem item,
     required int listId,
     required int position,
   }) async {
@@ -25,7 +27,7 @@ class DriftRepository extends ShopperRepository {
 
   @override
   Future<void> updateShoppingItem(
-      {required ShoppingItem item,
+      {required GroceriesItem item,
       required int listId,
       required int position}) async {
     await _db.updateItem(DriftShoppingItem(
@@ -37,32 +39,32 @@ class DriftRepository extends ShopperRepository {
   }
 
   @override
-  Future updateItemPositions({required List<ShoppingItem> items, required int listId}) async {
+  Future updateItemPositions({required List<GroceriesItem> items, required int listId}) async {
     _db.updatePositions(_modelToDriftItems(items, listId));
   }
 
   @override
-  Future<List<ShoppingList>> getAllShoppingLists() {
+  Future<List<GroceriesList>> getAllShoppingLists() {
     // TODO: implement getAllShoppingLists
     throw UnimplementedError();
   }
 
   @override
-  Future<ShoppingList?> getFirstShoppingList() async {
+  Future<GroceriesList?> getFirstShoppingList() async {
     final listId = (await _db.firstShoppingList)?.id;
     if (listId == null) return null;
     return getShoppingList(listId);
   }
 
-  Future<ShoppingList> getShoppingList(int id) async {
+  Future<GroceriesList> getShoppingList(int id) async {
     var driftList = await _db.getList(id);
     final driftItems = await _db.getItemsForList(id);
     return _driftListToModel(driftList, driftItems: driftItems);
   }
 
   @override
-  Future<List<ShoppingItem>> getItemsForList(
-      {required ShoppingList list}) async {
+  Future<List<GroceriesItem>> getItemsForList(
+      {required GroceriesList list}) async {
     final listId = list.id;
     if (listId != null) {
       return _driftItemsToModel(await _db.getItemsForList(listId));
@@ -72,7 +74,7 @@ class DriftRepository extends ShopperRepository {
   }
 
   @override
-  Stream<List<ShoppingItem>> watchItemsForList({required ShoppingList list}) {
+  Stream<List<GroceriesItem>> watchItemsForList({required GroceriesList list}) {
     final listId = list.id;
     if (listId != null) {
       return _db
@@ -88,24 +90,24 @@ class DriftRepository extends ShopperRepository {
     _db.close();
   }
 
-  ShoppingItem _driftItemToModel(DriftShoppingItem driftItem) {
-    return ShoppingItem(driftItem.label, driftItem.completed, driftItem.id);
+  LocalGroceriesItem _driftItemToModel(DriftShoppingItem driftItem) {
+    return LocalGroceriesItem(driftItem.label, driftItem.completed, driftItem.id);
   }
 
-  List<ShoppingItem> _driftItemsToModel(List<DriftShoppingItem> driftItems) {
+  List<LocalGroceriesItem> _driftItemsToModel(List<DriftShoppingItem> driftItems) {
     return driftItems.map((e) => _driftItemToModel(e)).toList();
   }
 
-  ShoppingList _driftListToModel(DriftShoppingList driftList,
+  LocalGroceriesList _driftListToModel(DriftShoppingList driftList,
       {List<DriftShoppingItem> driftItems = const []}) {
-    var list = ShoppingList(title: driftList.title, id: driftList.id);
+    var list = LocalGroceriesList(title: driftList.title, id: driftList.id);
     for (final driftItem in driftItems) {
       list.items.add(_driftItemToModel(driftItem));
     }
     return list;
   }
 
-  List<DriftShoppingItem> _modelToDriftItems(List<ShoppingItem> items, int listId) {
+  List<DriftShoppingItem> _modelToDriftItems(List<GroceriesItem> items, int listId) {
     List<DriftShoppingItem> result = [];
     var index = 0;
     for (var item in items) {
@@ -116,7 +118,7 @@ class DriftRepository extends ShopperRepository {
   }
 
   @override
-  Future deleteItem({required ShoppingItem item}) async {
+  Future deleteItem({required GroceriesItem item}) async {
     await _db.deleteItem(item.id!);
   }
 }

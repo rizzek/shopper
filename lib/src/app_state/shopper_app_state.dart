@@ -2,23 +2,24 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shopper/src/app_state/remote_credential_store.dart';
+import 'package:shopper/src/domain/entities/groceries_item.dart';
+import 'package:shopper/src/domain/entities/groceries_list.dart';
+import 'package:shopper/src/domain/repositories/groceries_repository.dart';
 import 'package:shopper/src/model/shopping_item.dart';
-import 'package:shopper/src/model/shopping_list.dart';
-import 'package:shopper/src/repositories/drift/drift_repository.dart';
-import 'package:shopper/src/repositories/shopper_repository.dart';
+import 'package:shopper/src/data/repositories/drift/drift_repository.dart';
 
 class ShopperAppState extends ChangeNotifier {
-  final ShopperRepository _shopperRepository = DriftRepository();
+  final GroceriesRepository _shopperRepository = DriftRepository();
 
   final RemoteCredentialStore _remoteCredentialStore = RemoteCredentialStore();
 
-  late ShoppingList _list;
+  late GroceriesList _list;
 
-  List<ShoppingItem> listItems = [];
+  List<GroceriesItem> listItems = [];
 
-  Stream<List<ShoppingItem>>? _listItems;
+  Stream<List<GroceriesItem>>? _listItems;
 
-  StreamSubscription<List<ShoppingItem>>? _listItemsSubscription;
+  StreamSubscription<List<GroceriesItem>>? _listItemsSubscription;
 
   Future<void> init() async {
     final list = await _shopperRepository.getFirstShoppingList();
@@ -44,18 +45,18 @@ class ShopperAppState extends ChangeNotifier {
   }
 
   void addItem({int? position}) {
-    _shopperRepository.createShoppingItem(item: ShoppingItem('', false, null), listId: _list.id!, position: position ?? listItems.length);
+    _shopperRepository.createShoppingItem(item: LocalGroceriesItem('', false, null), listId: _list.id!, position: position ?? listItems.length);
   }
 
-  void updateItem(ShoppingItem item, {int? position}) {
+  void updateItem(GroceriesItem item, {int? position}) {
     _shopperRepository.updateShoppingItem(item: item, listId: _list.id!, position: position ?? listItems.indexWhere((listItem) => listItem.id == item.id));
   }
 
-  void updateItemPositions(List<ShoppingItem> items) {
+  void updateItemPositions(List<GroceriesItem> items) {
     _shopperRepository.updateItemPositions(items: items, listId: _list.id!);
   }
 
-  void deleteItem(ShoppingItem item) async {
+  void deleteItem(GroceriesItem item) async {
     await _shopperRepository.deleteItem(item: item);
     updateItemPositions(listItems);
   }

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:shopper/src/model/shopping_item.dart';
+import 'package:shopper/src/domain/entities/groceries_item.dart';
 
 part 'drift_models.g.dart';
 
@@ -68,7 +68,7 @@ class DriftShopperDatabase extends _$DriftShopperDatabase {
   }
 
   Future<int> createShoppingItem(
-      ShoppingItem item, int listId, int position) async {
+      GroceriesItem item, int listId, int position) async {
     return into(driftShoppingItems).insert(
       DriftShoppingItemsCompanion(
         label: Value(item.label),

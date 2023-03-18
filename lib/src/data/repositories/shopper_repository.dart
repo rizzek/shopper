@@ -1,29 +1,30 @@
+import 'package:shopper/src/domain/entities/groceries_list.dart';
 import 'package:shopper/src/model/shopping_item.dart';
 import 'package:shopper/src/model/shopping_list.dart';
 
 abstract class ShopperRepository {
-  Future<List<ShoppingList>> getAllShoppingLists();
+  Future<List<GroceriesList>> getAllShoppingLists();
 
-  Future<ShoppingList?> getFirstShoppingList();
+  Future<LocalGroceriesList?> getFirstShoppingList();
 
-  Future<List<ShoppingItem>> getItemsForList({required ShoppingList list});
+  Future<List<LocalGroceriesItem>> getItemsForList({required LocalGroceriesList list});
 
-  Stream<List<ShoppingItem>> watchItemsForList({required ShoppingList list});
+  Stream<List<LocalGroceriesItem>> watchItemsForList({required LocalGroceriesList list});
 
-  Future<ShoppingList> createShoppingList({required String title});
+  Future<LocalGroceriesList> createShoppingList({required String title});
 
   Future<void> createShoppingItem({
-    required ShoppingItem item,
+    required LocalGroceriesItem item,
     required int listId,
     required int position,
   });
 
   Future<void> updateShoppingItem(
-      {required ShoppingItem item, required int listId, required int position});
+      {required LocalGroceriesItem item, required int listId, required int position});
 
-  Future updateItemPositions({required List<ShoppingItem> items, required int listId});
+  Future updateItemPositions({required List<LocalGroceriesItem> items, required int listId});
 
-  Future deleteItem({required ShoppingItem item});
+  Future deleteItem({required LocalGroceriesItem item});
 
   void close();
 }
