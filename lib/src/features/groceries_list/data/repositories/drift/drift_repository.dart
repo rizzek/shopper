@@ -1,9 +1,9 @@
-import 'package:shopper/src/domain/entities/groceries_item.dart';
-import 'package:shopper/src/domain/entities/groceries_list.dart';
-import 'package:shopper/src/domain/repositories/groceries_repository.dart';
-import 'package:shopper/src/model/shopping_item.dart';
-import 'package:shopper/src/model/shopping_list.dart';
-import 'package:shopper/src/data/repositories/drift/drift_models.dart';
+
+
+import 'package:shopper/src/features/groceries_list/data/repositories/drift/drift_models.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_item.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_list.dart';
+import 'package:shopper/src/features/groceries_list/domain/repositories/groceries_repository.dart';
 
 import 'shared.dart';
 
@@ -90,17 +90,17 @@ class DriftRepository extends GroceriesRepository {
     _db.close();
   }
 
-  LocalGroceriesItem _driftItemToModel(DriftShoppingItem driftItem) {
-    return LocalGroceriesItem(driftItem.label, driftItem.completed, driftItem.id);
+  GroceriesItem _driftItemToModel(DriftShoppingItem driftItem) {
+    return GroceriesItem(driftItem.label, driftItem.completed, driftItem.id);
   }
 
-  List<LocalGroceriesItem> _driftItemsToModel(List<DriftShoppingItem> driftItems) {
+  List<GroceriesItem> _driftItemsToModel(List<DriftShoppingItem> driftItems) {
     return driftItems.map((e) => _driftItemToModel(e)).toList();
   }
 
-  LocalGroceriesList _driftListToModel(DriftShoppingList driftList,
+  GroceriesList _driftListToModel(DriftShoppingList driftList,
       {List<DriftShoppingItem> driftItems = const []}) {
-    var list = LocalGroceriesList(title: driftList.title, id: driftList.id);
+    var list = GroceriesList(title: driftList.title, id: driftList.id);
     for (final driftItem in driftItems) {
       list.items.add(_driftItemToModel(driftItem));
     }

@@ -2,11 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:shopper/src/app_state/remote_credential_store.dart';
-import 'package:shopper/src/domain/entities/groceries_item.dart';
-import 'package:shopper/src/domain/entities/groceries_list.dart';
-import 'package:shopper/src/domain/repositories/groceries_repository.dart';
-import 'package:shopper/src/model/shopping_item.dart';
-import 'package:shopper/src/data/repositories/drift/drift_repository.dart';
+import 'package:shopper/src/features/groceries_list/data/repositories/drift/drift_repository.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_item.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_list.dart';
+import 'package:shopper/src/features/groceries_list/domain/repositories/groceries_repository.dart';
 
 class ShopperAppState extends ChangeNotifier {
   final GroceriesRepository _shopperRepository = DriftRepository();
@@ -45,7 +44,7 @@ class ShopperAppState extends ChangeNotifier {
   }
 
   void addItem({int? position}) {
-    _shopperRepository.createShoppingItem(item: LocalGroceriesItem('', false, null), listId: _list.id!, position: position ?? listItems.length);
+    _shopperRepository.createShoppingItem(item: GroceriesItem('', false, null), listId: _list.id!, position: position ?? listItems.length);
   }
 
   void updateItem(GroceriesItem item, {int? position}) {

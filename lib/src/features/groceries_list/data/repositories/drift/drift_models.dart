@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:shopper/src/domain/entities/groceries_item.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_item.dart';
 
 part 'drift_models.g.dart';
 

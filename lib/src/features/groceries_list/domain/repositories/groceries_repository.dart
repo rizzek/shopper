@@ -1,5 +1,5 @@
-import 'package:shopper/src/domain/entities/groceries_item.dart';
-import 'package:shopper/src/domain/entities/groceries_list.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_item.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_list.dart';
 
 abstract class GroceriesRepository {
   Future<List<GroceriesList>> getAllShoppingLists();

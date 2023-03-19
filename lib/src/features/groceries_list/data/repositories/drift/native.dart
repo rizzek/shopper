@@ -7,7 +7,8 @@ import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path_lib;
-import 'package:shopper/src/data/repositories/drift/drift_models.dart';
+import 'package:shopper/src/features/groceries_list/data/repositories/drift/drift_models.dart';
+
 
 DriftShopperDatabase openConnection() {
   final db = LazyDatabase(() async {

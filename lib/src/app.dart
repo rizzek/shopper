@@ -3,10 +3,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:shopper/src/presentation/home/home_screen.dart';
+import 'package:shopper/src/features/groceries_list/presentation/home/home_screen.dart';
+import 'package:shopper/src/features/groceries_list/presentation/settings/settings_controller.dart';
+import 'package:shopper/src/features/groceries_list/presentation/settings/settings_view.dart';
 
-import 'presentation/settings/settings_controller.dart';
-import 'presentation/settings/settings_view.dart';
 
 /// The Widget that configures your application.
 class ShopperApp extends StatelessWidget {

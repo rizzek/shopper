@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopper/src/app_state/shopper_app_state.dart';
-import 'package:shopper/src/domain/entities/groceries_item.dart';
-import 'package:shopper/src/model/shopping_item.dart';
+import 'package:shopper/src/features/groceries_list/domain/entities/groceries_item.dart';
+
 
 class ShoppingListTile extends StatelessWidget {
   const ShoppingListTile({Key? key, required this.shoppingItem}) : super(key: key);

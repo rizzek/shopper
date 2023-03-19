@@ -1,5 +1,5 @@
 
-abstract class GroceriesItem {
+class GroceriesItem {
   GroceriesItem(this.label, this.completed, this.id);
 
   String label;
