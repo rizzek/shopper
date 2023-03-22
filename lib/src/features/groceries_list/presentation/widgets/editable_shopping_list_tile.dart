@@ -4,13 +4,13 @@ import 'package:shopper/src/app_state/shopper_app_state.dart';
 import 'package:shopper/src/features/groceries_list/domain/entities/groceries_item.dart';
 
 class EditableShoppingListTile extends StatefulWidget {
-  EditableShoppingListTile(
+  const EditableShoppingListTile(
       {Key? key, required this.shoppingItem, required this.onEnter})
       : super(key: key);
 
-  GroceriesItem shoppingItem;
+  final GroceriesItem shoppingItem;
 
-  VoidCallback onEnter;
+  final VoidCallback onEnter;
 
   @override
   State<EditableShoppingListTile> createState() =>

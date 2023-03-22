@@ -44,15 +44,15 @@ class ShopperAppState extends ChangeNotifier {
   }
 
   void addItem({int? position}) {
-    _shopperRepository.createShoppingItem(item: GroceriesItem('', false, null), listId: _list.id!, position: position ?? listItems.length);
+    _shopperRepository.createShoppingItem(item: GroceriesItem('', false, null), listId: _list.id, position: position ?? listItems.length);
   }
 
   void updateItem(GroceriesItem item, {int? position}) {
-    _shopperRepository.updateShoppingItem(item: item, listId: _list.id!, position: position ?? listItems.indexWhere((listItem) => listItem.id == item.id));
+    _shopperRepository.updateShoppingItem(item: item, listId: _list.id, position: position ?? listItems.indexWhere((listItem) => listItem.id == item.id));
   }
 
   void updateItemPositions(List<GroceriesItem> items) {
-    _shopperRepository.updateItemPositions(items: items, listId: _list.id!);
+    _shopperRepository.updateItemPositions(items: items, listId: _list.id);
   }
 
   void deleteItem(GroceriesItem item) async {

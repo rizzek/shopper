@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reorderables/reorderables.dart';
 import 'package:shopper/src/app_state/shopper_app_state.dart';
-import 'package:shopper/src/features/groceries_list/presentation/home/widgets/editable_shopping_list_tile.dart';
-import 'package:shopper/src/features/groceries_list/presentation/home/widgets/shopping_list_tile.dart';
+import 'package:shopper/src/features/groceries_list/presentation/widgets/editable_shopping_list_tile.dart';
+import 'package:shopper/src/features/groceries_list/presentation/widgets/shopping_list_tile.dart';
 
 class GroceriesListWidget extends StatelessWidget {
   const GroceriesListWidget({

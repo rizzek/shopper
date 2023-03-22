@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shopper/src/app_state/shopper_app_state.dart';
-import 'package:shopper/src/features/groceries_list/presentation/settings/settings_controller.dart';
-import 'package:shopper/src/features/groceries_list/presentation/settings/settings_service.dart';
+import 'package:shopper/src/features/settings/presentation/settings/settings_controller.dart';
+import 'package:shopper/src/features/settings/presentation/settings/settings_service.dart';
 
 import 'src/app.dart';
 

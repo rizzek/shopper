@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:shopper/src/features/groceries_list/presentation/home/widgets/groceries_list_widget.dart';
+import 'package:shopper/src/features/groceries_list/presentation/widgets/groceries_list_widget.dart';
 import 'package:shopper/src/features/main_menu/main_menu.dart';
 
 
